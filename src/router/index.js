@@ -135,7 +135,7 @@ const router = createRouter([]);
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter(routesList) {
-    if (router.options.routes.length > 2) {
+    if (router.options.routes.length > constantRoutes.length) {
         return;
     }
     const newRouter = createRouter(routesList);
