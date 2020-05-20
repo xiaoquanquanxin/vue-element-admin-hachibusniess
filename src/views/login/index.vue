@@ -199,11 +199,11 @@
                         const data = Object.assign({}, this.loginForm, {
                             clientKey: this.clientKey,
                         });
-                        console.log('请求数据', JSON.stringify(data));
+                        // console.log('请求数据', JSON.stringify(data));
                         this.$store.dispatch('user/login', data)
                             .then(() => {
                                 this.loading = false;
-                                console.log('登录成功');
+                                // console.log('登录成功');
                                 this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
                             })
                             .catch(() => {
