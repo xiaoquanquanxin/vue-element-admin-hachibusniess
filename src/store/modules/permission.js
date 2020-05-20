@@ -1,6 +1,7 @@
 import {constantRoutes} from '@/router';
 import {getRoutes} from '@/api/role';
 import {convertRouting} from "@/router/modules/routerBasicMap";
+import Layout from "@/layout/index";
 
 const state = {
     routes: [],
@@ -31,6 +32,20 @@ const actions = {
             .then(accessedRoutes => {
                 //  todo    处理服务端路由，转为前端路由
                 const routesList = convertRouting(accessedRoutes.data);
+                routesList.push(
+                    {
+                        path: '/documentation',
+                        component: Layout,
+                        children: [
+                            {
+                                path: 'index',
+                                component: () => import('@/views/documentation/index'),
+                                name: 'Documentation',
+                                meta: {title: 'Documentation', icon: 'documentation', affix: true}
+                            }
+                        ]
+                    }
+                );
                 routesList.push({path: '*', redirect: '/404', hidden: true});
                 commit('SET_ROUTES', routesList);
                 return routesList;

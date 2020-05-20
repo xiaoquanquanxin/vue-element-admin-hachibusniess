@@ -22,6 +22,7 @@
                     return this.roles[0];
                 },
                 set(val) {
+                    debugger;
                     this.$store.dispatch('user/changeRoles', val).then(() => {
                         this.$emit('change');
                     });
