@@ -28,10 +28,10 @@ router.beforeEach(async (to, from, next) => {
             // const hasRoles = store.getters.roles && store.getters.roles.length > 0;
             // const hasRoles = store.getters.roles && store.getters.roles.length > 0;
             const routerLinkComplete = store.getters.permission_routes && store.getters.permission_routes.length > constantRoutes.length;
-            console.log(`routerLinkComplete 是否拉取过服务端路由了`);
             if (routerLinkComplete) {
                 next();
             } else {
+                console.log(`没有拉取过服务端路由 routerLinkComplete ，这除了第一次刷新页面，不应该出现 ： ${routerLinkComplete}`);
                 try {
                     // get user info
                     // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']

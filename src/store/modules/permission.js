@@ -1,7 +1,5 @@
-import {constantRoutes} from '@/router';
-import {getRoutes} from '@/api/role';
+import {constantRoutes, wildcardCharacterRoute} from '@/router';
 import {convertRouting} from "@/router/modules/routerBasicMap";
-import Layout from "@/layout/index";
 
 const state = {
     routes: [],
@@ -12,11 +10,6 @@ const mutations = {
     SET_ROUTES: (state, routes) => {
         state.addRoutes = routes;
         state.routes = constantRoutes.concat(routes);
-        // state.routes = [].concat(routes);
-        // console.table(JSON.parse(JSON.stringify(state.routes)));
-        // console.table((state.routes));
-        // console.table((JSON.stringify(state.routes)));
-        // console.table(JSON.parse(JSON.stringify(constantRoutes)));
         return state.routes;
     }
 };
@@ -24,29 +17,15 @@ const mutations = {
 const actions = {
     //  生成路由权限，从服务端动态拉取
     generateRoutes({commit}) {
-        const str = '{data:[{"icon":"icon","routerId":"77bab4355c1a43cf8b064868071022a0","id":"9","parentId":"0","name":"商家设置","haveChildren":false},{"icon":"icon","routerId":"05f15a29b74648479e99160676a5cbe4","id":"8","parentId":"0","name":"财务结算","haveChildren":false},{"icon":"icon","routerId":"7e09717be5e647fab92bcc70e15c3ced","id":"7","parentId":"0","name":"优惠/验券","haveChildren":false},{"icon":"icon","routerId":"c29a2b1a79914122b98e810d026e17f2","id":"6","parentId":"0","name":"订单管理","haveChildren":false},{"icon":"icon","routerId":"ce3405acd6f447ed995a3e53171c9ab0","id":"5","parentId":"0","name":"场地预约","haveChildren":false},{"icon":"icon","routerId":"3f5c553a09d44b6a8a07622be472fe41","id":"4","parentId":"0","name":"课程/培训","haveChildren":false},{"icon":"icon","routerId":"a1560d26d13b4af0a51329b8480599f3","id":"3","parentId":"0","name":"服务管理","haveChildren":false},{"icon":"icon","routerId":"831782ef588d4e438fc3b30d4b24c2d5","id":"2","parentId":"0","name":"商品管理","haveChildren":true,"children":[{"url":"/goodsInfo/listGoodsByPage","icon":"icon","routerId":"d84ee213f91540298100547d57f72786","id":"10","parentId":"2","name":"商品管理","haveChildren":false}]}]}';
-        // return new Promise(resolve => {
-        //     resolve(JSON.parse(str));
-        // });
-        return getRoutes()
+        const str = '{"data":[{"icon":"icon","routerId":"77bab4355c1a43cf8b064868071022a0","id":"9","parentId":"0","name":"商家设置","haveChildren":false},{"icon":"icon","routerId":"05f15a29b74648479e99160676a5cbe4","id":"8","parentId":"0","name":"财务结算","haveChildren":false},{"icon":"icon","routerId":"7e09717be5e647fab92bcc70e15c3ced","id":"7","parentId":"0","name":"优惠/验券","haveChildren":false},{"icon":"icon","routerId":"c29a2b1a79914122b98e810d026e17f2","id":"6","parentId":"0","name":"订单管理","haveChildren":false},{"icon":"icon","routerId":"ce3405acd6f447ed995a3e53171c9ab0","id":"5","parentId":"0","name":"场地预约","haveChildren":false},{"icon":"icon","routerId":"3f5c553a09d44b6a8a07622be472fe41","id":"4","parentId":"0","name":"课程/培训","haveChildren":false},{"icon":"icon","routerId":"a1560d26d13b4af0a51329b8480599f3","id":"3","parentId":"0","name":"服务管理","haveChildren":false},{"icon":"icon","routerId":"831782ef588d4e438fc3b30d4b24c2d5","id":"2","parentId":"0","name":"商品管理","haveChildren":true,"children":[{"url":"/goodsInfo/listGoodsByPage","icon":"icon","routerId":"d84ee213f91540298100547d57f72786","id":"10","parentId":"2","name":"商品管理","haveChildren":false}]}]}';
+        return new Promise(resolve => {
+            resolve(JSON.parse(str));
+        })
+        // return getRoutes()
             .then(accessedRoutes => {
                 //  todo    处理服务端路由，转为前端路由
                 const routesList = convertRouting(accessedRoutes.data);
-                routesList.push(
-                    {
-                        path: '/documentation',
-                        component: Layout,
-                        children: [
-                            {
-                                path: 'index',
-                                component: () => import('@/views/documentation/index'),
-                                name: 'Documentation',
-                                meta: {title: 'Documentation', icon: 'documentation', affix: true}
-                            }
-                        ]
-                    }
-                );
-                routesList.push({path: '*', redirect: '/404', hidden: true});
+                routesList.push(wildcardCharacterRoute);
                 commit('SET_ROUTES', routesList);
                 return routesList;
             });

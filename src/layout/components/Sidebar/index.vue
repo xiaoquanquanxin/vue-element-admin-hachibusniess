@@ -49,6 +49,6 @@
             isCollapse() {
                 return !this.sidebar.opened;
             }
-        }
+        },
     };
 </script>

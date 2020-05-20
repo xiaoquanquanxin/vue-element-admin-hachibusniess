@@ -3,63 +3,56 @@ import Layout from "@/layout/index";
 const routerBasicMap = {
     //  商品管理一级路由
     "831782ef588d4e438fc3b30d4b24c2d5": {
-        path: "/goodsInfo",
+        path: "/commodityBasic",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
+        redirect: "/commodityBasic/commodityManagement",
         alwaysShow: true,
     },
-    //  商品管理子路由
+    //  商品管理二级路由
     "d84ee213f91540298100547d57f72786": {
-        path: "listGoodsByPage",
+        path: "commodityManagement",
         component: () => import("@/views/permission/role"),
     },
     //  商家设置一级路由
-    "77bab4355c1a43cf8b064868071022a0":{
-        path: "/goodsInfo",
+    "77bab4355c1a43cf8b064868071022a0": {
+        path: "/merchantSettings",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
     //  财务结算一级路由
-    "05f15a29b74648479e99160676a5cbe4":{
-        path: "/goodsInfo",
+    "05f15a29b74648479e99160676a5cbe4": {
+        path: "/financeBasic",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
     //  优惠/验券一级路由
-    "7e09717be5e647fab92bcc70e15c3ced":{
-        path: "/goodsInfo",
+    "7e09717be5e647fab92bcc70e15c3ced": {
+        path: "/discountsVoucher",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
     //  场地预约一级路由
-    "c29a2b1a79914122b98e810d026e17f2":{
-        path: "/goodsInfo",
+    "c29a2b1a79914122b98e810d026e17f2": {
+        path: "/venueBooking",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
     //  订单管理一级路由
-    "ce3405acd6f447ed995a3e53171c9ab0":{
-       path: "/goodsInfo",
+    "ce3405acd6f447ed995a3e53171c9ab0": {
+        path: "/orderManagement ",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
     //  课程/培训一级路由
-    "3f5c553a09d44b6a8a07622be472fe41":{
-       path: "/goodsInfo",
+    "3f5c553a09d44b6a8a07622be472fe41": {
+        path: "/trainingCourse ",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
     //  服务管理一级路由
-    "a1560d26d13b4af0a51329b8480599f3":{
-       path: "/goodsInfo",
+    "a1560d26d13b4af0a51329b8480599f3": {
+        path: "/serveBasic",
         component: Layout,
-        redirect: "/goodsInfo/listGoodsByPage",
         alwaysShow: false,
     },
 };
@@ -68,7 +61,8 @@ const routerBasicMap = {
 export function convertRouting(routesList) {
     const arr = [];
     routesList.forEach(item => {
-        arr.push(convertRoutingItem(item));
+        const data = convertRoutingItem(item);
+        arr.push(data);
     });
     return arr;
 }
@@ -88,7 +82,7 @@ function convertRoutingItem(routes) {
     item.meta = item.meta || {};
     const meta = item.meta;
     meta.icon = routes.icon;
-    meta.name = routes.name;
+    meta.title = routes.name;
     meta.id = routes.id;
     meta.roles = ["admin", "editor"];
     return item;

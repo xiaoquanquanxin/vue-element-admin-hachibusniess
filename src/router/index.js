@@ -121,6 +121,9 @@ export const constantRoutes = [
     },
 ];
 
+//  通配符的路由
+export const wildcardCharacterRoute = {path: '*', redirect: '/404', hidden: true};
+
 
 const createRouter = (routesList) => new Router({
     // mode: 'history',
