@@ -79,6 +79,7 @@ function convertRoutingItem(routes) {
         item.children = convertRouting(routes.children);
     }
     //  todo    做一些赋值操作
+    item.name = routes.name;
     item.meta = item.meta || {};
     const meta = item.meta;
     meta.icon = routes.icon;

@@ -39,10 +39,6 @@
                     matched = [{path: '/dashboard', meta: {title: 'Dashboard'}}].concat(matched);
                 }
                 this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false);
-                // this.levelList.forEach(item => {
-                // console.log(item);
-                // });
-                // console.log(JSON.parse(JSON.stringify(this.levelList)));
             },
             isDashboard(route) {
                 const name = route && route.name;
