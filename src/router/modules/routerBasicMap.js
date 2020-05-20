@@ -11,6 +11,7 @@ const routerBasicMap = {
     //  商品管理二级路由
     "d84ee213f91540298100547d57f72786": {
         path: "commodityManagement",
+        hasHistoryName: true,
         component: () => import("@/views/permission/role"),
     },
     //  商家设置一级路由
@@ -18,6 +19,7 @@ const routerBasicMap = {
         path: "/merchantSettings",
         component: Layout,
         alwaysShow: false,
+        //  todo    将来加上 redirect 字段，这些一级路由就不会被匹配了
     },
     //  财务结算一级路由
     "05f15a29b74648479e99160676a5cbe4": {
@@ -78,8 +80,12 @@ function convertRoutingItem(routes) {
     if (routes.haveChildren) {
         item.children = convertRouting(routes.children);
     }
+    //  前端map的字段，用于告诉 src\layout\components\TagsView\index.vue 组件，是否展示条形历史记录
+    if (item.hasHistoryName) {
+        item.name = routes.name;
+    }
+
     //  todo    做一些赋值操作
-    item.name = routes.name;
     item.meta = item.meta || {};
     const meta = item.meta;
     meta.icon = routes.icon;
