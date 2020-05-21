@@ -1,10 +1,11 @@
-import router, {constantRoutes, resetRouter} from './router';
+import router from './router';
 import store from './store';
 import {Message} from 'element-ui';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
 import {getToken} from '@/utils/auth'; // get token from cookie
 import getPageTitle from '@/utils/get-page-title';
+import {constantRoutes} from "@/router/constantRoutes";
 
 NProgress.configure({showSpinner: false}); // NProgress Configuration
 
@@ -16,56 +17,63 @@ router.beforeEach(async (to, from, next) => {
 
     // set page title
     document.title = getPageTitle(to.meta.title);
-
+    // console.log(JSON.parse(JSON.stringify(to)));
     const hasToken = getToken();
+    //  如果登录了
     if (hasToken) {
-        //  如果登录过了，就直接到首页
+        //  如果登录过了，并且想要去登录页，不让他登录，直接去首页
         if (to.path === '/login') {
             next({path: '/'});
             NProgress.done();
-        } else {
-            // determine whether the user has obtained his permission roles through getInfo
-            // const hasRoles = store.getters.roles && store.getters.roles.length > 0;
-            // const hasRoles = store.getters.roles && store.getters.roles.length > 0;
-            const routerLinkComplete = store.getters.permission_routes && store.getters.permission_routes.length > constantRoutes.length;
-            if (routerLinkComplete) {
-                next();
-            } else {
-                console.log(`没有拉取过服务端路由 routerLinkComplete ，这除了第一次刷新页面，不应该出现 ： ${routerLinkComplete}`);
-                try {
-                    // get user info
-                    // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-                    //  fixme   这里强制修改了
-                    // const { roles } = await store.dispatch('user/getInfo');
-                    // generate accessible routes map based on roles
-                    const accessRoutes = await store.dispatch('permission/generateRoutes');
-                    // console.table(JSON.parse(JSON.stringify(accessRoutes)));
-                    router.addRoutes(accessRoutes);
-                    // console.table(JSON.parse(JSON.stringify(router.options.routes)));
-                    next({...to, replace: true});
-                } catch (error) {
-                    debugger;
-                    console.error(error);
-                    // remove token and go to login page to re-login
-                    await store.dispatch('user/removeToken');
-                    Message.error(error || 'Has Error');
-                    next(`/login?redirect=${to.path}`);
-                    NProgress.done();
-                }
-            }
         }
+        //  先判断有没有问服务端要过路由
+        const routerLinkComplete = store.getters.permission_routes && store.getters.permission_routes.length > constantRoutes.length;
+        //  如果没有要过路由
+        if (!routerLinkComplete) {
+            // console.log(`没有拉取过服务端路由 routerLinkComplete ，这除了第一次刷新页面，不应该出现 ： ${routerLinkComplete}`);
+            try {
+                // const { roles } = await store.dispatch('user/getInfo');
+                const accessRoutes = await store.dispatch('permission/generateRoutes');
+                router.addRoutes(accessRoutes);
+                //  todo    这里好像不需要那个异步验证
+                // console.log('异步路由', JSON.parse(JSON.stringify(to)));
+                next({...to, replace: true});
+            } catch (error) {
+                debugger;
+                console.error(error);
+                // remove token and go to login page to re-login
+                await store.dispatch('user/removeToken');
+                Message.error(error || 'Has Error');
+                next(`/login?redirect=${to.path}`);
+            }
+            NProgress.done();
+            return;
+        }
+        if (to.meta.id) {
+            //  todo    确定用户是否通过getInfo获得了他的权限角色
+            const permissionButtons = await store.dispatch('permission/generateButtons', to.meta.id);
+            // console.log(permissionButtons);
+            //  给当前路由下的按钮设置权限
+            to.meta.permissionButtons = permissionButtons;
+        }
+        // console.log(JSON.parse(JSON.stringify(store.getters.permission_routes)));
+        console.log('普通', JSON.parse(JSON.stringify(to.meta)));
+        next();
     } else {
-        debugger;
+        //  是不需要登录权限的白名单
         if (whiteList.indexOf(to.path) !== -1) {
+            console.log('是不需要登录权限的白名单');
             // in the free login whitelist, go directly
             next();
         } else {
-            // other pages that do not have permission to access are redirected to the login page.
+            //  没有访问权限的其他页面被重定向到登录页面。
+            console.log('没有访问权限的其他页面被重定向到登录页面');
             next(`/login?redirect=${to.path}`);
             NProgress.done();
         }
     }
 });
+
 
 router.afterEach(() => {
     // finish progress bar

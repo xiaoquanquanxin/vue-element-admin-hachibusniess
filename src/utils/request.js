@@ -10,8 +10,7 @@ const service = axios.create({
     timeout: 20000 * 1000 // request timeout
 
 });
-console.log(process.env.VUE_APP_BASE_API);
-
+console.log(`代理接口process.env.VUE_APP_BASE_API : ${process.env.VUE_APP_BASE_API}`);
 
 // request interceptor
 service.interceptors.request.use(

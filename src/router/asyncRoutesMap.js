@@ -1,6 +1,6 @@
 import Layout from "@/layout/index";
 
-const routerBasicMap = {
+const asyncRoutesMap = {
     //  商品管理一级路由
     "831782ef588d4e438fc3b30d4b24c2d5": {
         path: "/commodityBasic",
@@ -12,7 +12,7 @@ const routerBasicMap = {
     "d84ee213f91540298100547d57f72786": {
         path: "commodityManagement",
         hasHistoryName: true,
-        component: () => import("@/views/permission/role"),
+        component: () => import("@/views/commodity/management.vue"),
     },
     //  商家设置一级路由
     "77bab4355c1a43cf8b064868071022a0": {
@@ -73,7 +73,10 @@ export function convertRouting(routesList) {
  * @routes:{haveChildren:boolean}
  * */
 function convertRoutingItem(routes) {
-    const item = routerBasicMap[routes.routerId];
+    const item = asyncRoutesMap[routes.routerId];
+    // if ('d84ee213f91540298100547d57f72786' === routes.routerId) {
+    //     debugger;
+    // }
     if (item === undefined) {
         throw new Error(`出现了位置的路由，不存在于前端路由map中: ${routes.routerId}`);
     }
@@ -91,6 +94,6 @@ function convertRoutingItem(routes) {
     meta.icon = routes.icon;
     meta.title = routes.name;
     meta.id = routes.id;
-    meta.roles = ["admin", "editor"];
+    // meta.roles = ["admin", "editor"];
     return item;
 }
