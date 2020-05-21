@@ -51,10 +51,10 @@ router.beforeEach(async (to, from, next) => {
         }
         if (to.meta.id) {
             //  todo    确定用户是否通过getInfo获得了他的权限角色
-            const permissionButtons = await store.dispatch('permission/generateButtons', to.meta.id);
-            // console.log(permissionButtons);
+            const buttonPermissionMap = await store.dispatch('permission/generateButtons', to.meta.id);
+            console.log(`路由处`, buttonPermissionMap);
             //  给当前路由下的按钮设置权限
-            to.meta.permissionButtons = permissionButtons;
+            to.meta.buttonPermissionMap = buttonPermissionMap;
         }
         // console.log(JSON.parse(JSON.stringify(store.getters.permission_routes)));
         console.log('普通', JSON.parse(JSON.stringify(to.meta)));

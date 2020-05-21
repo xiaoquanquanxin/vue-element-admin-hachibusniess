@@ -1,37 +1,34 @@
 <template>
     <div class="app-container">
-        <el-button v-if="permissionButtons[1]"
-                   type="primary"
-                   @click="putAway">上架
-        </el-button>
-        <el-button v-if="permissionButtons[0]"
-                   type="primary"
-                   @click="soldOut">下架
-        </el-button>
+        <el-button v-if="goodsInfoUp.id" type="primary" @click="putAway" v-text="goodsInfoUp.remark"/>
+        <el-button v-if="goodsInfoDown.id" type="primary" @click="soldOut" v-text="goodsInfoDown.remark"/>
     </div>
 </template>
 <script>
+    //  当前页面按钮nameList
+    import {ManagementButtonList} from "@/button/asyncButtonsMap";
+
     export default {
         name: 'Management',
         data() {
             return {
-                permissionButtons: [],
+                ManagementButtonList,
+                buttonPermissionMap: null,
+                goodsInfoUp: {},
+                goodsInfoDown: {},
             };
         },
         watch: {
-            '$route': 'fetchData'
+            buttonPermissionMap(current, prev) {
+                this.goodsInfoUp = current[ManagementButtonList[0]];
+                this.goodsInfoDown = current[ManagementButtonList[1]];
+            }
         },
         created() {
-            console.warn('created Management ');
-            console.log(this.$route.meta.permissionButtons);
-            this.permissionButtons = this.$route.meta.permissionButtons;
+            this.buttonPermissionMap = this.$route.meta.buttonPermissionMap;
+            console.table(JSON.parse(JSON.stringify(this.buttonPermissionMap)));
         },
         methods: {
-            fetchData() {
-                this.error = this.post = null;
-                this.loading = true;
-                console.log('路由变化');
-            },
             putAway() {
                 this.$message({
                     type: 'success',

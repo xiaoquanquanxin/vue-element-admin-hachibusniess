@@ -1,5 +1,6 @@
 import {convertRouting} from "@/router/asyncRoutesMap";
 import {constantRoutes,wildcardCharacterRoute} from "@/router/constantRoutes";
+import {convertButtonList} from "@/button";
 
 const state = {
     routes: [],
@@ -40,8 +41,8 @@ const actions = {
         })
         // return getButtons(id)
             .then(response => {
-                // console.log(response.data);
-                return response.data;
+                //  转换按钮格式
+                return convertButtonList(response.data);
             });
     }
 };
