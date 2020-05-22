@@ -25,7 +25,8 @@ const asyncRoutesMap = {
         children: [
             {
                 path: 'index',
-                component: () => import("@/views/commodity/management.vue"),
+                hasHistoryName: true,
+                component: () => import("@/views/merchantSettings"),
             }
         ]
     },
