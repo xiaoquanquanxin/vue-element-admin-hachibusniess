@@ -1,5 +1,6 @@
 import Layout from "@/layout/index";
 
+//  用于映射服务端路由
 const asyncRoutesMap = {
     //  商品管理一级路由
     "831782ef588d4e438fc3b30d4b24c2d5": {
