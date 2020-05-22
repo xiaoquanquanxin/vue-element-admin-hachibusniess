@@ -6,8 +6,8 @@ const asyncRoutesMap = {
     "831782ef588d4e438fc3b30d4b24c2d5": {
         path: "/commodityBasic",
         component: Layout,
-        redirect: "/commodityBasic/commodityManagement",
         alwaysShow: true,
+        redirect: "/commodityBasic/commodityManagement",
     },
     //  商品管理二级路由
     "d84ee213f91540298100547d57f72786": {
@@ -19,8 +19,15 @@ const asyncRoutesMap = {
     "77bab4355c1a43cf8b064868071022a0": {
         path: "/merchantSettings",
         component: Layout,
-        alwaysShow: false,
+        useLocalChild: true,
         //  todo    将来加上 redirect 字段，这些一级路由就不会被匹配了
+        redirect: "/merchantSettings/index",
+        children: [
+            {
+                path: 'index',
+                component: () => import("@/views/commodity/management.vue"),
+            }
+        ]
     },
     //  财务结算一级路由
     "05f15a29b74648479e99160676a5cbe4": {
@@ -75,26 +82,37 @@ export function convertRouting(routesList) {
  * */
 function convertRoutingItem(routes) {
     const item = asyncRoutesMap[routes.routerId];
-    // if ('d84ee213f91540298100547d57f72786' === routes.routerId) {
-    //     debugger;
-    // }
+    if ('77bab4355c1a43cf8b064868071022a0' === routes.routerId) {
+        // debugger;
+    }
     if (item === undefined) {
         throw new Error(`出现了位置的路由，不存在于前端路由map中: ${routes.routerId}`);
     }
+    //  服务端判断是否有子节点
     if (routes.haveChildren) {
         item.children = convertRouting(routes.children);
     }
+    //  如果需要使用前端子节点，这种情况用于一级路由就是整个路由的情况
+    if (item.useLocalChild) {
+        const child = item.children[0];
+        setMetaInfo(child, routes);
+        return item;
+    }
+
+    setMetaInfo(item, routes);
+    // meta.roles = ["admin", "editor"];
+    return item;
+}
+
+function setMetaInfo(item, routes) {
     //  前端map的字段，用于告诉 src\layout\components\TagsView\index.vue 组件，是否展示条形历史记录
     if (item.hasHistoryName) {
         item.name = routes.name;
     }
-
     //  todo    做一些赋值操作
     item.meta = item.meta || {};
     const meta = item.meta;
     meta.icon = routes.icon;
     meta.title = routes.name;
     meta.id = routes.id;
-    // meta.roles = ["admin", "editor"];
-    return item;
 }
