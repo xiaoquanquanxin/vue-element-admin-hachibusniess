@@ -30,7 +30,7 @@ router.beforeEach(async (to, from, next) => {
         const routerLinkComplete = store.getters.permission_routes && store.getters.permission_routes.length > constantRoutes.length;
         //  如果没有要过路由
         if (!routerLinkComplete) {
-            // console.log(`没有拉取过服务端路由 routerLinkComplete ，这除了第一次刷新页面，不应该出现 ： ${routerLinkComplete}`);
+            console.log(`没有拉取过服务端路由 routerLinkComplete ，这除了第一次刷新页面，不应该出现 ： ${routerLinkComplete}`);
             try {
                 // const { roles } = await store.dispatch('user/getInfo');
                 const accessRoutes = await store.dispatch('permission/generateRoutes');
@@ -52,12 +52,12 @@ router.beforeEach(async (to, from, next) => {
         if (to.meta.id) {
             //  todo    确定用户是否通过getInfo获得了他的权限角色
             const buttonPermissionMap = await store.dispatch('permission/generateButtons', to.meta.id);
-            console.log(`路由处`, buttonPermissionMap);
+            console.log(`当前路由获取的按钮`, buttonPermissionMap);
             //  给当前路由下的按钮设置权限
             to.meta.buttonPermissionMap = buttonPermissionMap;
         }
         // console.log(JSON.parse(JSON.stringify(store.getters.permission_routes)));
-        console.log('普通', JSON.parse(JSON.stringify(to.meta)));
+        console.log('普通next的meta信息', JSON.parse(JSON.stringify(to.meta)));
         next();
     } else {
         //  是不需要登录权限的白名单

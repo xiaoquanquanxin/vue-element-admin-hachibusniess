@@ -8,7 +8,7 @@
                 <h1 class="text-jumbo text-ginormous">Oops!</h1>
                 gif来源<a href="https://zh.airbnb.com/" target="_blank">airbnb</a> 页面
                 <h2>你没有权限去该页面</h2>
-                <router-link to="/dashboard">
+                <router-link to="/">
                     回首页
                 </router-link>
             </el-col>
@@ -32,7 +32,7 @@
         methods: {
             back() {
                 if (this.$route.query.noGoBack) {
-                    this.$router.push({path: '/dashboard'});
+                    this.$router.push({path: '/'});
                 } else {
                     this.$router.go(-1);
                 }

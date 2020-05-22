@@ -8,30 +8,31 @@ export default {
         };
     },
     mounted() {
-        this.initListener();
+        // this.initListener();
     },
     activated() {
         if (!this.$_resizeHandler) {
             // avoid duplication init
-            this.initListener();
+            // this.initListener();
         }
 
         // when keep-alive chart activated, auto resize
         this.resize();
     },
     beforeDestroy() {
-        this.destroyListener();
+        // this.destroyListener();
     },
     deactivated() {
-        this.destroyListener();
+        // this.destroyListener();
     },
     methods: {
     // use $_ for mixins properties
     // https://vuejs.org/v2/style-guide/index.html#Private-property-names-essential
         $_sidebarResizeHandler(e) {
-            if (e.propertyName === 'width') {
-                this.$_resizeHandler();
-            }
+            return;
+            // if (e.propertyName === 'width') {
+            //     this.$_resizeHandler();
+            // }
         },
         initListener() {
             this.$_resizeHandler = debounce(() => {
