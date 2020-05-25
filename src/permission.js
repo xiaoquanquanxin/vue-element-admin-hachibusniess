@@ -56,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
             //  给当前路由下的按钮设置权限
             to.meta.buttonPermissionMap = buttonPermissionMap;
         }
-        console.table(JSON.parse(JSON.stringify(store.getters.permission_routes)));
+        // console.table(JSON.parse(JSON.stringify(store.getters.permission_routes)));
         console.log('普通next的meta信息', JSON.parse(JSON.stringify(to.meta)));
         next();
     } else {

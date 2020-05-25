@@ -123,21 +123,26 @@
                 console.log(checkedKeys);
             },
             //  选中某一个节点，获取权限树右侧按钮
-            currentChange(node) {
-                console.log(node);
+            currentChange(data, nodeStatus, c) {
+                // console.log(data, nodeStatus.checked, c);
+                //  过滤选中状态
+                if (nodeStatus.checked) {
+                    this.permissionButtons = [];
+                    return false;
+                }
                 //  过滤父节点，不请求
-                if (node.haveChildren) {
+                if (data.haveChildren) {
                     return false;
                 }
                 const roleId = this.roleId;
-                const menuId = node.id;
+                const menuId = data.id;
                 getRoleAuthorizedPermission({
                     roleId,
                     menuId,
                 })
                     .then(response => {
                         this.permissionButtons = response.data;
-                        console.log(response.data);
+                        // console.table(JSON.parse(JSON.stringify(this.permissionButtons)));
                     });
             }
         }
