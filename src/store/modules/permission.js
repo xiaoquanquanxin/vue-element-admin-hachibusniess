@@ -1,6 +1,7 @@
 import {convertRouting} from "@/router/asyncRoutesMap";
-import {constantRoutes,wildcardCharacterRoute} from "@/router/constantRoutes";
+import {constantRoutes, wildcardCharacterRoute} from "@/router/constantRoutes";
 import {convertButtonList} from "@/button";
+import {getRoutes, getButtons} from "@/api/role";
 
 const state = {
     routes: [],

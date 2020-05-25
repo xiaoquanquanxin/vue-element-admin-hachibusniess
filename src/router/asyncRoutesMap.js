@@ -34,7 +34,16 @@ const asyncRoutesMap = {
     "05f15a29b74648479e99160676a5cbe4": {
         path: "/financeBasic",
         component: Layout,
-        alwaysShow: false,
+        useLocalChild: true,
+        redirect: "/financeBasic/index",
+        children: [
+            {
+                path: 'index',
+                hasHistoryName: true,
+                //  这其实是角色管理
+                component: () => import("@/views/role-management"),
+            }
+        ]
     },
     //  优惠/验券一级路由
     "7e09717be5e647fab92bcc70e15c3ced": {

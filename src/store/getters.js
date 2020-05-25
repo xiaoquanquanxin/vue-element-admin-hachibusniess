@@ -1,6 +1,7 @@
 const getters = {
     sidebar: state => state.app.sidebar,
-    size: state => state.app.size,
+    //  文字大小
+    fontSize: state => state.app.fontSize,
     device: state => state.app.device,
     visitedViews: state => state.tagsView.visitedViews,
     cachedViews: state => state.tagsView.cachedViews,
@@ -10,6 +11,8 @@ const getters = {
     introduction: state => state.user.introduction,
     roles: state => state.user.roles,
     permission_routes: state => state.permission.routes,
-    errorLogs: state => state.errorLog.logs
+    errorLogs: state => state.errorLog.logs,
+    //  角色权限管理被选中的数据
+    getSelectRoleManagementId: state => state.roleManagement.selectRoleId,
 };
 export default getters;

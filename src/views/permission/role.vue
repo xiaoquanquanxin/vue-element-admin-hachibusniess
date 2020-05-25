@@ -57,9 +57,7 @@
     </div>
 </template>
 <script>
-    import path from 'path';
-    import { deepClone } from '@/utils';
-    import { getRoutes } from '@/api/role';
+
 
     const defaultRole = {
         key: '',

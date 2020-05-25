@@ -26,13 +26,14 @@
         },
         computed: {
             size() {
-                console.log(this.$store.getters.fontSize);
+                // console.log( this.$store.getters);
+                // console.log(this.$store.getters.fontSize);
                 return this.$store.getters.fontSize;
             }
         },
         methods: {
             handleSetSize(size) {
-                debugger;
+                // debugger;
                 this.$ELEMENT.size = size;
                 this.$store.dispatch('app/setSize', size);
                 this.refreshView();

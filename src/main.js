@@ -33,8 +33,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(Element, {
-    // size: localStorage.getItem('fontsize') || 'medium'// set element-ui default size
-    size: 'mini'// set element-ui default size
+    size: localStorage.getItem('fontsize') || 'medium'// set element-ui default size
 });
 
 
