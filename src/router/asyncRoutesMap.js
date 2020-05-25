@@ -42,7 +42,19 @@ const asyncRoutesMap = {
                 hasHistoryName: true,
                 //  这其实是角色管理
                 component: () => import("@/views/role-management"),
-            }
+            },
+            {
+                path: 'edit',
+                hidden: true,
+                hasHistoryName: true,
+                //  这其实是角色管理的编辑
+                component: () => import("@/views/role-management/edit"),
+                //  本地元数据
+                localMeta: {
+                    name: '角色管理-编辑',
+                    icon: 'icon',
+                }
+            },
         ]
     },
     //  优惠/验券一级路由
@@ -104,13 +116,17 @@ function convertRoutingItem(routes) {
     }
     //  如果需要使用前端子节点，这种情况用于一级路由就是整个路由的情况
     if (item.useLocalChild) {
-        const child = item.children[0];
-        setMetaInfo(child, routes);
+        if (!item.children || item.children.length === 0) {
+            throw new Error('错误的前端数据结构，这里需要很多children');
+        }
+        item.children.forEach(_item => {
+            console.log(item.path, JSON.parse(JSON.stringify(_item)));
+            //  如果有本地meta，使用本地元数据
+            setMetaInfo(_item, _item.localMeta || routes);
+        });
         return item;
     }
-
     setMetaInfo(item, routes);
-    // meta.roles = ["admin", "editor"];
     return item;
 }
 
