@@ -28,13 +28,15 @@ import * as filters from './filters'; // global filters
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'production') {
-    const { mockXHR } = require('../mock');
+    const {mockXHR} = require('../mock');
     mockXHR();
 }
 
 Vue.use(Element, {
-    size: Cookies.get('size') || 'medium' // set element-ui default size
+    // size: localStorage.getItem('fontsize') || 'medium'// set element-ui default size
+    size: 'mini'// set element-ui default size
 });
+
 
 // register global utility filters
 Object.keys(filters).forEach(key => {

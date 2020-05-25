@@ -1,13 +1,15 @@
-import Cookies from 'js-cookie';
+//  侧边栏的状态，1是打开，0是合住，这个放到localstorage里面
+const SideBarStatus = 'sidebarStatus';
+const FontSize = 'fontsize';
 
 const state = {
     sidebar: {
-        // opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+        // opened: Cookies.get(SideBarStatus) ? !!+Cookies.get(SideBarStatus) : true,
         opened: true,
         withoutAnimation: false
     },
     device: 'desktop',
-    size: Cookies.get('size') || 'medium'
+    fontSize: localStorage.getItem(FontSize) || 'default',
 };
 
 const mutations = {
@@ -16,39 +18,40 @@ const mutations = {
         state.sidebar.opened = true;
         state.sidebar.withoutAnimation = false;
         if (state.sidebar.opened) {
-            Cookies.set('sidebarStatus', 1);
+            localStorage.setItem(SideBarStatus, '1');
         } else {
-            // Cookies.set('sidebarStatus', 0);
-            Cookies.set('sidebarStatus', 1);
+            // todo 应该是 localStorage.setItem(SideBarStatus, '0');
+            localStorage.setItem(SideBarStatus, '1');
         }
     },
     CLOSE_SIDEBAR: (state, withoutAnimation) => {
-        // Cookies.set('sidebarStatus', 0);
-        Cookies.set('sidebarStatus', 1);
-        state.sidebar.opened = false;
+        // todo 应该是 localStorage.setItem(SideBarStatus, '0');
+        localStorage.setItem(SideBarStatus, '1');
+        //  todo    应该是 state.sidebar.opened = false;
+        state.sidebar.opened = true;
         state.sidebar.withoutAnimation = withoutAnimation;
     },
     TOGGLE_DEVICE: (state, device) => {
         state.device = device;
     },
-    SET_SIZE: (state, size) => {
-        state.size = size;
-        Cookies.set('size', size);
+    SET_SIZE: (state, fontSize) => {
+        state.fontSize = fontSize;
+        localStorage.setItem(FontSize, fontSize);
     }
 };
 
 const actions = {
-    toggleSideBar({ commit }) {
+    toggleSideBar({commit}) {
         commit('TOGGLE_SIDEBAR');
     },
-    closeSideBar({ commit }, { withoutAnimation }) {
+    closeSideBar({commit}, {withoutAnimation}) {
         commit('CLOSE_SIDEBAR', withoutAnimation);
     },
-    toggleDevice({ commit }, device) {
+    toggleDevice({commit}, device) {
         commit('TOGGLE_DEVICE', device);
     },
-    setSize({ commit }, size) {
-        commit('SET_SIZE', size);
+    setSize({commit}, fontSize) {
+        commit('SET_SIZE', fontSize);
     }
 };
 

@@ -5,14 +5,14 @@
         </div>
         <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
-                {{
-                    item.label }}
+                {{ item.label }}
             </el-dropdown-item>
         </el-dropdown-menu>
     </el-dropdown>
 </template>
 
 <script>
+    //  换字体大小
     export default {
         data() {
             return {
@@ -26,16 +26,18 @@
         },
         computed: {
             size() {
-                return this.$store.getters.size;
+                console.log(this.$store.getters.fontSize);
+                return this.$store.getters.fontSize;
             }
         },
         methods: {
             handleSetSize(size) {
+                debugger;
                 this.$ELEMENT.size = size;
                 this.$store.dispatch('app/setSize', size);
                 this.refreshView();
                 this.$message({
-                    message: 'Switch Size Success',
+                    message: '选择字体成功',
                     type: 'success'
                 });
             },
