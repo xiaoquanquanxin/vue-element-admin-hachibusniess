@@ -45,7 +45,9 @@ export function parseTime(time, cFormat) {
     const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
         const value = formatObj[key];
         // Note: getDay() returns 0 on Sunday
-        if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ]; }
+        if (key === 'a') {
+            return ['日', '一', '二', '三', '四', '五', '六'][value];
+        }
         return value.toString().padStart(2, '0');
     });
     return time_str;
@@ -70,7 +72,7 @@ export function formatTime(time, option) {
     if (diff < 30) {
         return '刚刚';
     } else if (diff < 3600) {
-    // less 1 hour
+        // less 1 hour
         return Math.ceil(diff / 60) + '分钟前';
     } else if (diff < 3600 * 24) {
         return Math.ceil(diff / 3600) + '小时前';
@@ -82,14 +84,14 @@ export function formatTime(time, option) {
     } else {
         return (
             d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
+            1 +
+            '月' +
+            d.getDate() +
+            '日' +
+            d.getHours() +
+            '时' +
+            d.getMinutes() +
+            '分'
         );
     }
 }
@@ -168,12 +170,12 @@ export function param2Obj(url) {
     }
     return JSON.parse(
         '{"' +
-      decodeURIComponent(search)
-          .replace(/"/g, '\\"')
-          .replace(/&/g, '","')
-          .replace(/=/g, '":"')
-          .replace(/\+/g, ' ') +
-      '"}'
+        decodeURIComponent(search)
+            .replace(/"/g, '\\"')
+            .replace(/&/g, '","')
+            .replace(/=/g, '":"')
+            .replace(/\+/g, ' ') +
+        '"}'
     );
 }
 
@@ -225,8 +227,8 @@ export function toggleClass(element, className) {
         classString += '' + className;
     } else {
         classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length);
+            classString.substr(0, nameIndex) +
+            classString.substr(nameIndex + className.length);
     }
     element.className = classString;
 }
@@ -252,8 +254,8 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
     let timeout, args, context, timestamp, result;
 
-    const later = function() {
-    // 据上一次触发时间间隔
+    const later = function () {
+        // 据上一次触发时间间隔
         const last = +new Date() - timestamp;
 
         // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
@@ -269,7 +271,7 @@ export function debounce(func, wait, immediate) {
         }
     };
 
-    return function(...args) {
+    return function (...args) {
         context = this;
         timestamp = +new Date();
         const callNow = immediate && !timeout;
@@ -353,3 +355,5 @@ export function removeClass(ele, cls) {
         ele.className = ele.className.replace(reg, ' ');
     }
 }
+
+export const JSONParse = (data) => JSON.parse(JSON.stringify(data));

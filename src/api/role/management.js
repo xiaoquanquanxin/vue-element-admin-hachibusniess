@@ -9,7 +9,7 @@ export function getRoleListRoleByPage(query) {
     });
 }
 
-//  查询角色下的权限树
+//  查询角色下勾选的的权限树
 export function getRoleAuthorizedMenu(query) {
     return request({
         url: '/menu/getRoleAuthorizedMenu',
