@@ -41,13 +41,14 @@
                 </div>
             </el-col>
         </el-row>
+        <br>
         <el-button type="primary" @click="getCheckedKeys">提交</el-button>
     </div>
 </template>
 <script>
-    import {getRoleAuthorizedMenu, getRoleAuthorizedPermission} from "@/api/role/management";
+    import {getRoleAuthorizedMenu, getRoleAuthorizedPermission, setRoleAuthorized} from "@/api/role/management";
     import {getRoutes} from "@/api/role";
-    import {JSONParse} from "../../utils";
+    import {JSONParse} from "@/utils";
 
     export default {
         name: 'MerchantSettingsEdit',
@@ -220,12 +221,21 @@
             },
             //  提交，获取当前选中的所有节点
             getCheckedKeys() {
-                const checkedKeys = this.$refs.tree.getCheckedKeys();
-                console.log(checkedKeys);
-                console.log(JSONParse(this.permissionButtonsForPost));
+                const roleId = this.roleId;
+                const menuIds = this.$refs.tree.getCheckedKeys().join(',');
+                const permissionIds = this.permissionButtonsForPost.join(',');
+                console.log(roleId);
+                console.log(menuIds);
+                console.log(permissionIds);
+                setRoleAuthorized({
+                    roleId,
+                    menuIds,
+                    permissionIds,
+                })
+                    .then(response => {
+                        console.log(response);
+                    });
             },
-
-
         }
     };
 </script>

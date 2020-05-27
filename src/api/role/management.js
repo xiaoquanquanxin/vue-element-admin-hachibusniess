@@ -27,3 +27,12 @@ export function getRoleAuthorizedPermission(query) {
         params: query,
     });
 }
+
+//  提交角色权限
+export function setRoleAuthorized( data) {
+    return request({
+        url: '/role/roleAuthorized',
+        method: 'post',
+        data
+    });
+}
