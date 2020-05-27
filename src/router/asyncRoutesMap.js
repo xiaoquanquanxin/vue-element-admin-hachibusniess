@@ -34,7 +34,7 @@ const asyncRoutesMap = {
     "05f15a29b74648479e99160676a5cbe4": {
         path: "/financeBasic",
         component: Layout,
-        redirect: "/financeBasic/index",
+        alwaysShow: false,
     },
     //  优惠/验券一级路由
     "7e09717be5e647fab92bcc70e15c3ced": {

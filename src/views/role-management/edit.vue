@@ -20,7 +20,7 @@
                                 @current-change="currentChange"
                             >
                                 <span slot-scope="{ node }" class="custom-tree-node">
-                                    <span>123{{ node.label }}</span>
+                                    <span>{{ node.label }}</span>
                                 </span>
                             </el-tree>
                         </div>
