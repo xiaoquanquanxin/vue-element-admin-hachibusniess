@@ -61,18 +61,18 @@ const asyncRoutesMap = {
         alwaysShow: false,
     },
     //  服务管理一级路由
-    "a1560d26d13b4af0a51329b8480599f3": {
-        path: "/serveBasic",
-        component: Layout,
-        alwaysShow: false,
-    },
+    // "a1560d26d13b4af0a51329b8480599f3": {
+    //     path: "/serveBasic",
+    //     component: Layout,
+    //     alwaysShow: false,
+    // },
 
     //  系统管理一级路由
     "09696bbc35a24ed5b39429541b36751a": {
         path: "/systemManagement",
         component: Layout,
-        alwaysShow: false,
         useLocalChildMerge: true,
+        alwaysShow: true,
         redirect: "/systemManagement/index",
         children: [
             {
@@ -89,10 +89,9 @@ const asyncRoutesMap = {
             },
         ]
     },
-    //  角色管理
+    //  系统管理——角色管理
     "87c68cefb8b0497eb5c1a41545b60b50": {
-        path: "/systemManagement/index",
-        alwaysShow: false,
+        path: "index",
         hasHistoryName: true,
         component: () => import("@/views/role-management"),
     }
@@ -103,6 +102,9 @@ export function convertRouting(routesList) {
     const arr = [];
     routesList.forEach(item => {
         const data = convertRoutingItem(item);
+        if (!data) {
+            return;
+        }
         arr.push(data);
     });
     return arr;
@@ -113,11 +115,13 @@ export function convertRouting(routesList) {
  * */
 function convertRoutingItem(routes) {
     const item = asyncRoutesMap[routes.routerId];
-    if ('77bab4355c1a43cf8b064868071022a0' === routes.routerId) {
+    if ('09696bbc35a24ed5b39429541b36751a' === routes.routerId) {
         // debugger;
     }
     if (item === undefined) {
-        throw new Error(`出现了位置的路由，不存在于前端路由map中: ${routes.routerId}`);
+        console.warn(`出现了位置的路由，不存在于前端路由map中: ${routes.routerId}`);
+        return false;
+        // throw new Error(`出现了位置的路由，不存在于前端路由map中: ${routes.routerId}`);
     }
     //  如果需要使用前端子节点，这种情况用于一级路由就是整个路由的情况
     // if (item.useLocalChildOnly) {
@@ -142,7 +146,7 @@ function convertRoutingItem(routes) {
     //     });
     // }
     const childrenList = item.children || [];
-    if(item.useLocalChildOnly || item.useLocalChildMerge){
+    if (item.useLocalChildOnly || item.useLocalChildMerge) {
         if (!childrenList || childrenList.length === 0) {
             throw new Error('错误的前端数据结构，这里需要很多children');
         }

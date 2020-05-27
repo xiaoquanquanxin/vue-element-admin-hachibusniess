@@ -38,7 +38,6 @@ router.beforeEach(async (to, from, next) => {
                 // console.log('异步路由', JSON.parse(JSON.stringify(to)));
                 next({...to, replace: true});
             } catch (error) {
-                debugger;
                 console.error(error);
                 // remove token and go to login page to re-login
                 await store.dispatch('user/removeToken');
@@ -55,7 +54,7 @@ router.beforeEach(async (to, from, next) => {
             //  给当前路由下的按钮设置权限
             to.meta.buttonPermissionMap = buttonPermissionMap;
         }
-        // console.table(JSON.parse(JSON.stringify(store.getters.permission_routes)));
+        console.log(JSON.parse(JSON.stringify(store.getters.permission_routes)));
         console.log('普通next的meta信息', JSON.parse(JSON.stringify(to.meta)));
         next();
     } else {
