@@ -85,7 +85,7 @@
             //  检查roleId，不应该为空
             if (this.roleId === null) {
                 //  如果没有roleId，去角色的首页
-                this.$router.replace('/financeBasic');
+                this.$router.replace('/systemManagement');
                 return false;
             }
             //  清空被选中的role数据的id

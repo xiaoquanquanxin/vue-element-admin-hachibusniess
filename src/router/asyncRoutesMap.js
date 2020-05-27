@@ -19,7 +19,7 @@ const asyncRoutesMap = {
     "77bab4355c1a43cf8b064868071022a0": {
         path: "/merchantSettings",
         component: Layout,
-        useLocalChild: true,
+        useLocalChildOnly: true,
         //  todo    将来加上 redirect 字段，这些一级路由就不会被匹配了
         redirect: "/merchantSettings/index",
         children: [
@@ -34,28 +34,7 @@ const asyncRoutesMap = {
     "05f15a29b74648479e99160676a5cbe4": {
         path: "/financeBasic",
         component: Layout,
-        useLocalChild: true,
         redirect: "/financeBasic/index",
-        children: [
-            {
-                path: 'index',
-                hasHistoryName: true,
-                //  这其实是角色管理
-                component: () => import("@/views/role-management"),
-            },
-            {
-                path: 'edit',
-                hidden: true,
-                hasHistoryName: true,
-                //  这其实是角色管理的编辑
-                component: () => import("@/views/role-management/edit"),
-                //  本地元数据
-                localMeta: {
-                    name: '角色管理-编辑',
-                    icon: 'icon',
-                }
-            },
-        ]
     },
     //  优惠/验券一级路由
     "7e09717be5e647fab92bcc70e15c3ced": {
@@ -87,6 +66,36 @@ const asyncRoutesMap = {
         component: Layout,
         alwaysShow: false,
     },
+
+    //  系统管理一级路由
+    "09696bbc35a24ed5b39429541b36751a": {
+        path: "/systemManagement",
+        component: Layout,
+        alwaysShow: false,
+        useLocalChildMerge: true,
+        redirect: "/systemManagement/index",
+        children: [
+            {
+                path: 'edit',
+                hidden: true,
+                hasHistoryName: true,
+                //  这其实是角色管理的编辑
+                component: () => import("@/views/role-management/edit"),
+                //  本地元数据
+                localMeta: {
+                    name: '角色管理-编辑',
+                    icon: 'icon',
+                }
+            },
+        ]
+    },
+    //  角色管理
+    "87c68cefb8b0497eb5c1a41545b60b50": {
+        path: "/systemManagement/index",
+        alwaysShow: false,
+        hasHistoryName: true,
+        component: () => import("@/views/role-management"),
+    }
 };
 
 //  把服务端的路由，根据 routerId 字段，转为前端路由，这里需要一个 map：routerBasicMap 作比对
@@ -110,22 +119,49 @@ function convertRoutingItem(routes) {
     if (item === undefined) {
         throw new Error(`出现了位置的路由，不存在于前端路由map中: ${routes.routerId}`);
     }
-    //  服务端判断是否有子节点
-    if (routes.haveChildren) {
-        item.children = convertRouting(routes.children);
-    }
     //  如果需要使用前端子节点，这种情况用于一级路由就是整个路由的情况
-    if (item.useLocalChild) {
-        if (!item.children || item.children.length === 0) {
+    // if (item.useLocalChildOnly) {
+    //     if (!item.children || item.children.length === 0) {
+    //         throw new Error('错误的前端数据结构，这里需要很多children');
+    //     }
+    //     item.children.forEach(_item => {
+    //         console.log(item.path, JSON.parse(JSON.stringify(_item)));
+    //         //  如果有本地meta，使用本地元数据
+    //         setMetaInfo(_item, _item.localMeta || routes);
+    //     });
+    //     return item;
+    // }
+    // if(item.useLocalChildMerge){
+    //     if (!item.children || item.children.length === 0) {
+    //         throw new Error('错误的前端数据结构，这里需要很多children');
+    //     }
+    //     item.children.forEach(_item => {
+    //         console.log(item.path, JSON.parse(JSON.stringify(_item)));
+    //         //  如果有本地meta，使用本地元数据
+    //         setMetaInfo(_item, _item.localMeta || routes);
+    //     });
+    // }
+    const childrenList = item.children || [];
+    if(item.useLocalChildOnly || item.useLocalChildMerge){
+        if (!childrenList || childrenList.length === 0) {
             throw new Error('错误的前端数据结构，这里需要很多children');
         }
-        item.children.forEach(_item => {
+        childrenList.forEach(_item => {
             console.log(item.path, JSON.parse(JSON.stringify(_item)));
             //  如果有本地meta，使用本地元数据
             setMetaInfo(_item, _item.localMeta || routes);
         });
-        return item;
+        //  如果需要使用前端子节点，这种情况用于一级路由就是整个路由的情况
+        if (item.useLocalChildOnly) {
+            return item;
+        }
     }
+
+    //  服务端判断是否有子节点
+    if (routes.haveChildren) {
+        item.children = childrenList.concat(convertRouting(routes.children));
+    }
+
     setMetaInfo(item, routes);
     return item;
 }

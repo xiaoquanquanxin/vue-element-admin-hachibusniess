@@ -1,7 +1,7 @@
 <template>
     <div class="app-container">
-        <el-button v-if="goodsInfoUp.id" type="primary" @click="putAway" v-text="goodsInfoUp.remark"/>
-        <el-button v-if="goodsInfoDown.id" type="primary" @click="soldOut" v-text="goodsInfoDown.remark"/>
+        <el-button v-if="goodsInfoUp" type="primary" @click="putAway" v-text="goodsInfoUp.remark"/>
+        <el-button v-if="goodsInfoDown" type="primary" @click="soldOut" v-text="goodsInfoDown.remark"/>
     </div>
 </template>
 <script>
@@ -14,19 +14,20 @@
             return {
                 ManagementButtonList,
                 buttonPermissionMap: null,
-                goodsInfoUp: {},
-                goodsInfoDown: {},
+                goodsInfoUp: null,
+                goodsInfoDown: null,
             };
         },
         watch: {
             buttonPermissionMap(current, prev) {
+                console.log(ManagementButtonList[0]);
                 this.goodsInfoUp = current[ManagementButtonList[0]];
                 this.goodsInfoDown = current[ManagementButtonList[1]];
             }
         },
         created() {
             this.buttonPermissionMap = this.$route.meta.buttonPermissionMap;
-            console.table(JSON.parse(JSON.stringify(this.buttonPermissionMap)));
+            console.log(JSON.parse(JSON.stringify(this.buttonPermissionMap)));
         },
         methods: {
             putAway() {

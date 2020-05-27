@@ -32,7 +32,6 @@ router.beforeEach(async (to, from, next) => {
         if (!routerLinkComplete) {
             console.log(`没有拉取过服务端路由 routerLinkComplete ，这除了第一次刷新页面，不应该出现 ： ${routerLinkComplete}`);
             try {
-                // const { roles } = await store.dispatch('user/getInfo');
                 const accessRoutes = await store.dispatch('permission/generateRoutes');
                 router.addRoutes(accessRoutes);
                 //  todo    这里好像不需要那个异步验证

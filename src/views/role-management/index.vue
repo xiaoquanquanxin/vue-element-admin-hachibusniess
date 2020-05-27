@@ -74,7 +74,7 @@
                     return false;
                 }
                 this.$router.push({
-                    path: '/financeBasic/edit',
+                    path: '/systemManagement/edit',
                 });
             }
         }
