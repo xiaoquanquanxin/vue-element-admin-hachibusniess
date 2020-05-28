@@ -7,7 +7,8 @@ export function convertButtonList(list) {
     list.forEach(item => {
         const localButtonInfo = asyncButtonsMap[item.name];
         if (!localButtonInfo) {
-            throw new Error(`前端没有配置这个按钮 ${item.name}`);
+            console.log(`前端没有配置这个按钮 ${item.name}`);
+            // throw new Error(`前端没有配置这个按钮 ${item.name}`);
         }
         buttonPermissionMap[item.name] = item;
     });

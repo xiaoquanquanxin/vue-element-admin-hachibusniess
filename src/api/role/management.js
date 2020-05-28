@@ -18,13 +18,21 @@ export function getRoleAuthorizedMenu(query) {
     });
 }
 
-//  权限树右侧按钮接口
-export function getRoleAuthorizedPermission(query) {
+//  权限树右侧的全部复选框
+export function getRoleAuthorizedPermission() {
+    return request({
+        url: '/permission/getRoleAuthorizedPermission',
+        method: 'get',
+    });
+}
+
+//  权限树右侧的被选中的复选框
+export function getRoleCheckedPermission(query) {
     //  roleId=1&menuId=10
     return request({
         url: '/permission/getRoleAuthorizedPermission',
         method: 'get',
-        params: query,
+        params: query
     });
 }
 
