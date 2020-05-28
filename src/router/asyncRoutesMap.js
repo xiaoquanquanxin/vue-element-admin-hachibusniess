@@ -71,14 +71,19 @@ const asyncRoutesMap = {
     "09696bbc35a24ed5b39429541b36751a": {
         path: "/systemManagement",
         component: Layout,
-        useLocalChildMerge: true,
         alwaysShow: true,
         redirect: "/systemManagement/index",
+    },
+    //  系统管理——角色管理
+    "87c68cefb8b0497eb5c1a41545b60b50": {
+        path: "index",
+        hasHistoryName: true,
+        component: () => import("@/views/role-management"),
+        useLocalChildMerge: true,
         children: [
             {
                 path: 'edit',
                 hidden: true,
-                hasHistoryName: true,
                 //  这其实是角色管理的编辑
                 component: () => import("@/views/role-management/edit"),
                 //  本地元数据
@@ -88,12 +93,6 @@ const asyncRoutesMap = {
                 }
             },
         ]
-    },
-    //  系统管理——角色管理
-    "87c68cefb8b0497eb5c1a41545b60b50": {
-        path: "index",
-        hasHistoryName: true,
-        component: () => import("@/views/role-management"),
     }
 };
 

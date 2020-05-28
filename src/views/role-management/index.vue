@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div v-if="$route.fullPath==='/systemManagement/index'" class="app-container">
         <el-table
             v-loading="isLoading" border
             style="width: 100%"
@@ -20,6 +20,7 @@
         </el-table>
         <el-button type="primary" @click="gotoMerchantSettings">去 编辑 权限</el-button>
     </div>
+    <router-view v-else data-msg="用于增删改查的子路由"/>
 </template>
 <script>
     import {getRoleListRoleByPage} from "@/api/role/management";
@@ -46,6 +47,8 @@
         methods: {
             //  获取角色权限管理列表
             getTableData() {
+                console.log(this.$route.fullPath);
+                console.log(this.$route.path);
                 //  {"successful":true,"code":1000,"msg":"查询成功","data":{"pageNo":1,"pageSize":20,"totalCount":1,"totalPage":1,"data":[{"id":"1","name":"测试角色","remark":"测试角色","sort":1,"isDelete":0,"createTime":"2020-05-21 11:41:36","offset":0,"max":0}],"offset":0}}
                 // new Promise(resolve => {
                 //     const str = '{"successful":true,"code":1000,"msg":"查询成功","data":{"pageNo":1,"pageSize":20,"totalCount":1,"totalPage":1,"data":[{"id":"1","name":"测试角色","remark":"测试角色","sort":1,"isDelete":0,"createTime":"2020-05-21 11:41:36","offset":0,"max":0}],"offset":0}}';
@@ -74,7 +77,7 @@
                     return false;
                 }
                 this.$router.push({
-                    path: '/systemManagement/edit',
+                    path: '/systemManagement/index/edit',
                 });
             }
         }
