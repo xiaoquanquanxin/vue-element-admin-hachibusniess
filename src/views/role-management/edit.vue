@@ -46,7 +46,12 @@
     </div>
 </template>
 <script>
-    import {getRoleAuthorizedMenu, getRoleAuthorizedPermission, setRoleAuthorized} from "@/api/role/management";
+    import {
+        getRoleAuthorizedMenu,
+        getRoleAuthorizedPermission,
+        setRoleAuthorized,
+        getRoleCheckedPermission
+    } from "@/api/role/management";
     import {getRoutes} from "@/api/role";
     import {JSONParse} from "@/utils";
 
@@ -57,8 +62,6 @@
                 isLoading: true,
                 //  树的数据
                 treeData: [],
-                //  一维数组的树
-                // linearArrayTreeData: null,
                 //  默认展示哪些数据
                 roleAuthorizedMenu: [],
                 //  全部的复选框
@@ -71,14 +74,14 @@
                 permissionName: '',
                 //  维护右侧复选框的一维数组
                 permissionButtonsForPost: [],
-
+                //  当前选中的node的复选框的数据
+                checkedRouterPermission: [],
                 //  复选框变化了
                 checkboxChange: false,
-
                 //  当前角色的id，用于发送请求
                 roleId: this.$store.getters.getSelectRoleManagementId,
-                //  当前选中的node的复选框的数据
-                checkedRouterPermission: null,
+                //  请先提交弹框
+                confirmMessage: null,
             };
         },
         created() {
@@ -90,23 +93,26 @@
             }
             //  清空被选中的role数据的id
             this.$store.dispatch('roleManagement/clearSelectRoleId');
-            this.getTreeData()
-                .then(this.getCheckedTree)
-                .then(this.getRoleAuthorizedPermission);
+            console.clear();
+            this.getMainData();
         },
         methods: {
-            append(data) {
-                const newChild = {id: this.id++, label: 'testtest', children: []};
-                if (!data.children) {
-                    this.$set(data, 'children', []);
-                }
-                data.children.push(newChild);
+            //  重置数据
+            resetData() {
+                this.treeData = [];
+                this.roleAuthorizedMenu = [];
+                this.permissionIds = [];
+                this.permissionButtons = [];
+                this.permissionButtonsForChecked = [];
+                this.permissionButtonsForPost = [];
+                this.checkedRouterPermission = [];
             },
-            remove(node, data) {
-                const parent = node.parent;
-                const children = parent.data.children || parent.data;
-                const index = children.findIndex(d => d.id === data.id);
-                children.splice(index, 1);
+            //  获取数据
+            getMainData() {
+                this.getTreeData()
+                    .then(this.getCheckedTree)
+                    .then(this.getRoleCheckedPermission)
+                    .then(this.getRoleAuthorizedPermission);
             },
             //  查询角色下的权限树，然后再获取被选中的节点
             getTreeData() {
@@ -117,7 +123,7 @@
                         //  赋值
                         this.treeData = response.data;
                         // this.linearArrayTreeData = this.getLinearTreeArray(response.data);
-                        // console.log(JSONParse(this.linearArrayTreeData));
+                        console.log('树', JSONParse(this.treeData));
                     });
             },
             //  获取勾选的权限树
@@ -130,25 +136,40 @@
                     .then(response => {
                         // console.log(response.data.menuIds);
                         this.roleAuthorizedMenu = response.data.menuIds;
+                        console.log('被选中的树', JSONParse(this.roleAuthorizedMenu));
                     });
             },
-            //  获取权限树右侧复选框
-            getRoleAuthorizedPermission() {
+
+            //  获取被选中的复选框
+            getRoleCheckedPermission() {
                 const roleId = this.roleId;
-                getRoleAuthorizedPermission({
+                return getRoleCheckedPermission({
                     roleId,
                 })
                     .then(response => {
-                        //  将全部的复选框碾为一维数组，抽出其中的复选框id
+                        this.permissionButtonsForPost = response.data.permissionIds;
+                        console.log('被选中的复选框', JSONParse(this.permissionButtonsForPost));
+                    });
+            },
+
+            //  获取右侧复选框
+            getRoleAuthorizedPermission() {
+                return getRoleAuthorizedPermission()
+                    .then(response => {
+                        if (!response.data) {
+                            return;
+                        }
+                        //  将全部的按钮匹配被选中的id
                         Reflect.ownKeys(response.data).forEach(key => {
                             const itemList = response.data[key];
                             itemList.forEach(item => {
-                                item.isChecked = true;
-                                this.permissionButtonsForPost.push(item.permissionId);
+                                if (this.permissionButtonsForPost.indexOf(item.permissionId) !== -1) {
+                                    item.isChecked = true;
+                                }
                             });
                         });
                         this.permissionButtons = response.data;
-                        console.log(JSON.parse(JSON.stringify(this.permissionButtonsForPost)));
+                        console.log('复选框', JSONParse(this.permissionButtons));
                     });
             },
             //  转换树的格式，因为服务端返回了name，而前端需要label
@@ -163,26 +184,16 @@
                     this.transformTreeData(item.children);
                 });
             },
-            // //  将树碾平为一维数组
-            // getLinearTreeArray(treeList) {
-            //     let list = [];
-            //     treeList.forEach(item => {
-            //         list.push(item);
-            //         if (item.haveChildren) {
-            //             list = list.concat(this.getLinearTreeArray(item.children));
-            //         }
-            //     });
-            //     return list;
-            // },
 
             //  选中树的某一个节点
             currentChange(data) {
                 //  如果没变化过
                 if (!this.checkboxChange) {
-                    console.log(data.haveChildren);
+                    console.log(JSONParse(data));
+                    // console.log(data.haveChildren);
                     //  过滤父节点，不请求
                     if (data.haveChildren) {
-                        this.checkedRouterPermission = null;
+                        this.checkedRouterPermission = [];
                         return;
                     }
                     this.checkedRouterPermission = this.permissionButtons[data.routerId];
@@ -190,7 +201,11 @@
                     this.checkedRouterPermission && console.log(JSONParse(this.checkedRouterPermission));
                     return;
                 }
-                this.$message({
+                if (this.confirmMessage) {
+                    this.confirmMessage.close();
+                    this.confirmMessage = null;
+                }
+                this.confirmMessage = this.$message({
                     type: 'error',
                     message: '请先提交',
                 });
@@ -224,17 +239,16 @@
                 const roleId = this.roleId;
                 const menuIds = this.$refs.tree.getCheckedKeys().join(',');
                 const permissionIds = this.permissionButtonsForPost.join(',');
-                console.log(roleId);
-                console.log(menuIds);
-                console.log(permissionIds);
+                // console.log(`roleId:${roleId}`);
+                // console.log(`menuIds:${menuIds}`);
+                // console.log(`permissionIds:${permissionIds}`);
                 setRoleAuthorized({
                     roleId,
                     menuIds,
                     permissionIds,
                 })
-                    .then(response => {
-                        console.log(response);
-                    });
+                    .then(this.resetData)
+                    .then(this.getMainData);
             },
         }
     };

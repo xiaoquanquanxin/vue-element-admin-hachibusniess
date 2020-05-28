@@ -28,9 +28,9 @@ export function getRoleAuthorizedPermission() {
 
 //  权限树右侧的被选中的复选框
 export function getRoleCheckedPermission(query) {
-    //  roleId=1&menuId=10
+    //  roleId=1
     return request({
-        url: '/permission/getRoleAuthorizedPermission',
+        url: '/permission/getRoleCheckedPermission',
         method: 'get',
         params: query
     });

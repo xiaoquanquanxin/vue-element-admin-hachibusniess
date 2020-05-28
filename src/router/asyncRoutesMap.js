@@ -61,11 +61,11 @@ const asyncRoutesMap = {
         alwaysShow: false,
     },
     //  服务管理一级路由
-    // "a1560d26d13b4af0a51329b8480599f3": {
-    //     path: "/serveBasic",
-    //     component: Layout,
-    //     alwaysShow: false,
-    // },
+    "a1560d26d13b4af0a51329b8480599f3": {
+        path: "/serveBasic",
+        component: Layout,
+        alwaysShow: false,
+    },
 
     //  系统管理一级路由
     "09696bbc35a24ed5b39429541b36751a": {
